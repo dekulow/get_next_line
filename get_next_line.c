@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dekulow <dekulow@42.student.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/31 14:58:24 by dekulow           #+#    #+#             */
+/*   Updated: 2024/01/31 14:58:24 by dekulow          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 char	*ft_read_line_content(const char *content)
 {
-	unsigned int	index;
+	size_t			index;
 	char			*read_line;
 
 	index = 0;
@@ -30,8 +42,8 @@ char	*ft_read_line_content(const char *content)
 
 char	*ft_update_content(char *content)
 {
-	unsigned int	i;
-	unsigned int	j;
+	size_t			i;
+	size_t			j;
 	char			*new_content;
 
 	i = 0;
@@ -87,17 +99,18 @@ char	*get_next_line(int fd)
 /*
 int	main(void)
 {
-	int		fpointer;
+	int		fd;
 	char	*singleLine;
 
 	singleLine = malloc(1 * sizeof(char));
-	fpointer = open("testing.txt", 256);
+	fd = open("testing.txt", 256);
 	while(singleLine != NULL)
 	{
 		free(singleLine);
-		singleLine = get_next_line(fpointer);
+		singleLine = get_next_line(fd);
 		printf("%s", singleLine);
 	}
+	close(fd);
 	return (0);
 }
 */
