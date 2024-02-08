@@ -1,0 +1,60 @@
+name: exec-tester
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  actions: write
+
+jobs:
+  exec-tester:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: ${{github.repository}}
+          ref: 'tester'
+          token: ${{ secrets.PAT_GHA }}
+          fetch-depth: 0
+
+      - name: Merge and conflict management
+        run: |
+          git config --global user.email "dekulow@proton.me"
+          git config --global user.name "dekulow"
+          git fetch origin main:main
+          git merge origin/main || (git merge --abort && git checkout main -- . && git commit -am "Automatic conflict resolution (by ci)")
+          git push origin tester
+
+      - name: Install requirements
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc clang
+
+      - name: Tester [with BUFFER_SIZE 0]
+        run: |
+          cc -D BUFFER_SIZE=0 get_next_line.c get_next_line_utils.c main.c -o tester
+          ./tester
+
+      - name: Tester [with BUFFER_SIZE 1]
+        run: |
+          cc -D BUFFER_SIZE=1 get_next_line.c get_next_line_utils.c main.c -o tester
+          ./tester
+
+      - name: Tester [with BUFFER_SIZE 50]
+        run: |
+          cc -D BUFFER_SIZE=50 get_next_line.c get_next_line_utils.c main.c -o tester
+          ./tester
+
+      - name: Tester [with BUFFER_SIZE 100]
+        run: |
+          cc -D BUFFER_SIZE=100 get_next_line.c get_next_line_utils.c main.c -o tester
+          ./tester
+
+      - name: Tester [with BUFFER_SIZE 400]
+        run: |
+          cc -D BUFFER_SIZE=400 get_next_line.c get_next_line_utils.c main.c -o tester
+          ./tester
